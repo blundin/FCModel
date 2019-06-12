@@ -67,12 +67,12 @@ static void _sqlite3_update_hook(void *context, int sqlite_operation, char const
 - (FMDatabase *)database
 {
     if (! _openDatabase) fcm_onMainThread(^{
-        self.openDatabase = [[FMDatabase alloc] initWithPath:_path];
-        if (! [_openDatabase open]) {
+        self.openDatabase = [[FMDatabase alloc] initWithPath:self->_path];
+        if (! [self->_openDatabase open]) {
             [[NSException exceptionWithName:NSGenericException reason:[NSString stringWithFormat:@"Cannot open or create database at path: %@", self.path] userInfo:nil] raise];
         }
 
-        sqlite3_update_hook(_openDatabase.sqliteHandle, &_sqlite3_update_hook, (__bridge void *) self);
+        sqlite3_update_hook(self->_openDatabase.sqliteHandle, &_sqlite3_update_hook, (__bridge void *) self);
     });
     return _openDatabase;
 }
